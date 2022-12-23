@@ -1,0 +1,15 @@
+type Product @entity(immutable: true) {
+  id: ID!
+  alias: Bytes!
+  deployer: Bytes!
+  proxy: Bytes!
+  price: BigInt!
+  cahsback: BigInt!
+  timestamp: BigInt!
+}
+
+type ProductCounter @entity(immutable: false) {
+  id: ID!
+  count: BigInt!
+}
+

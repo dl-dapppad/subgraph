@@ -1,0 +1,27 @@
+{
+  "name": "dapppad-subgraph",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "test": "graph test -d",
+    "lint": "eslint src/**",
+    "lint-fix": "eslint src/** --fix",
+    "create-local": "graph create --node http://localhost:8020/ TEST_SUBGRAPH",
+    "remove-local": "graph remove --node http://localhost:8020/ TEST_SUBGRAPH",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 TEST_SUBGRAPH",
+    "auth": "graph auth --product hosted-service <ACCESS_TOKEN>",
+    "deploy": "graph codegen && graph build && graph deploy --product hosted-service <PRODUCT_NAME>"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.30.2",
+    "@graphprotocol/graph-ts": "0.27.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "eslint": "^8.24.0",
+    "typescript": "^4.8.4",
+    "matchstick-as": "^0.5.0"
+  }
+}
