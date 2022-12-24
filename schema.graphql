@@ -1,10 +1,10 @@
-type Product @entity(immutable: true) {
-  id: ID!
+type Product @entity {
+  id: Bytes!
   alias: Bytes!
   deployer: Bytes!
   proxy: Bytes!
   price: BigInt!
-  cahsback: BigInt!
+  cashback: BigInt!
   timestamp: BigInt!
 }
 

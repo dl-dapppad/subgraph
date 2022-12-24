@@ -3,14 +3,14 @@ import { Deployed } from "../generated/ProductFactory/ProductFactory";
 import { Product, ProductCounter } from "../generated/schema";
 
 export function handleDeploy(event: Deployed): void {
-  const product = new Product(event.params.proxy.toHex());
+  const product = new Product(event.params.proxy);
   const alias = event.params.productAlias;
 
   product.deployer = event.transaction.from;
   product.alias = alias;
   product.proxy = event.params.proxy;
   product.price = event.params.price;
-  product.cahsback = event.params.cashback;
+  product.cashback = event.params.cashback;
   product.timestamp = event.block.timestamp;
 
   product.save();

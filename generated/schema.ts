@@ -12,9 +12,9 @@ import {
 } from "@graphprotocol/graph-ts";
 
 export class Product extends Entity {
-  constructor(id: string) {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
@@ -22,24 +22,24 @@ export class Product extends Entity {
     assert(id != null, "Cannot save Product entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Product must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type Product must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Product", id.toString(), this);
+      store.set("Product", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: string): Product | null {
-    return changetype<Product | null>(store.get("Product", id));
+  static load(id: Bytes): Product | null {
+    return changetype<Product | null>(store.get("Product", id.toHexString()));
   }
 
-  get id(): string {
+  get id(): Bytes {
     let value = this.get("id");
-    return value!.toString();
+    return value!.toBytes();
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
   }
 
   get alias(): Bytes {
@@ -78,13 +78,13 @@ export class Product extends Entity {
     this.set("price", Value.fromBigInt(value));
   }
 
-  get cahsback(): BigInt {
-    let value = this.get("cahsback");
+  get cashback(): BigInt {
+    let value = this.get("cashback");
     return value!.toBigInt();
   }
 
-  set cahsback(value: BigInt) {
-    this.set("cahsback", Value.fromBigInt(value));
+  set cashback(value: BigInt) {
+    this.set("cashback", Value.fromBigInt(value));
   }
 
   get timestamp(): BigInt {

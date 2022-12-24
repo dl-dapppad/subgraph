@@ -7,7 +7,7 @@ export function createDeployedEvent(
   proxy: string,
   alias: string,
   price: string,
-  cahsback: string
+  cashback: string
 ): Deployed {
   const paymentAToken = "0x709ed5721249cd1d7a18914b867958283ad477ab";
   const mockEvent = newMockEvent();
@@ -33,8 +33,8 @@ export function createDeployedEvent(
   ));
   event.parameters.push(new ethereum.EventParam("price", ethereum.Value.fromUnsignedBigInt(BigInt.fromString(price))));
   event.parameters.push(new ethereum.EventParam(
-    "cahsback",
-    ethereum.Value.fromUnsignedBigInt(BigInt.fromString(cahsback))
+    "cashback",
+    ethereum.Value.fromUnsignedBigInt(BigInt.fromString(cashback))
   ));
 
   return event;

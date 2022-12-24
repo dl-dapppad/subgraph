@@ -18,7 +18,7 @@ describe("handleDeploy()", () => {
     assert.fieldEquals("Product", proxy, "alias", alias);
     assert.fieldEquals("Product", proxy, "proxy", proxy);
     assert.fieldEquals("Product", proxy, "price", "1");
-    assert.fieldEquals("Product", proxy, "cahsback", "2");
+    assert.fieldEquals("Product", proxy, "cashback", "2");
 
     assert.fieldEquals("ProductCounter", alias, "count", "1");
   });
@@ -34,7 +34,7 @@ describe("handleDeploy()", () => {
     assert.fieldEquals("Product", proxy1, "alias", alias1);
     assert.fieldEquals("Product", proxy1, "proxy", proxy1);
     assert.fieldEquals("Product", proxy1, "price", "1");
-    assert.fieldEquals("Product", proxy1, "cahsback", "2");
+    assert.fieldEquals("Product", proxy1, "cashback", "2");
     assert.fieldEquals("ProductCounter", alias1, "count", "1");
 
 
@@ -46,7 +46,7 @@ describe("handleDeploy()", () => {
     assert.fieldEquals("Product", proxy2, "alias", alias2);
     assert.fieldEquals("Product", proxy2, "proxy", proxy2);
     assert.fieldEquals("Product", proxy2, "price", "3");
-    assert.fieldEquals("Product", proxy2, "cahsback", "4");
+    assert.fieldEquals("Product", proxy2, "cashback", "4");
     assert.fieldEquals("ProductCounter", alias2, "count", "1");
 
     const proxy3 = "0xbe25c1dd013979e10e6628caeb707686dd1f73e3";
@@ -56,7 +56,7 @@ describe("handleDeploy()", () => {
     assert.fieldEquals("Product", proxy3, "alias", alias1);
     assert.fieldEquals("Product", proxy3, "proxy", proxy3);
     assert.fieldEquals("Product", proxy3, "price", "5");
-    assert.fieldEquals("Product", proxy3, "cahsback", "6");
+    assert.fieldEquals("Product", proxy3, "cashback", "6");
     assert.fieldEquals("ProductCounter", alias1, "count", "2");
   });
 });
