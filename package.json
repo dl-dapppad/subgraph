@@ -2,9 +2,10 @@
   "name": "dapppad-subgraph",
   "license": "UNLICENSED",
   "scripts": {
+    "compile": "graph codegen && graph build",
     "codegen": "graph codegen",
     "build": "graph build",
-    "test": "graph test -d",
+    "test": "graph test",
     "lint": "eslint src/**",
     "lint-fix": "eslint src/** --fix",
     "create-local": "graph create --node http://localhost:8020/ TEST_SUBGRAPH",

@@ -11,6 +11,74 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class Sale extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Sale entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type Sale must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Sale", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static load(id: Bytes): Sale | null {
+    return changetype<Sale | null>(store.get("Sale", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    return value!.toBytes();
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get buyer(): Bytes {
+    let value = this.get("buyer");
+    return value!.toBytes();
+  }
+
+  set buyer(value: Bytes) {
+    this.set("buyer", Value.fromBytes(value));
+  }
+
+  get points(): BigInt {
+    let value = this.get("points");
+    return value!.toBigInt();
+  }
+
+  set points(value: BigInt) {
+    this.set("points", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get product(): Bytes {
+    let value = this.get("product");
+    return value!.toBytes();
+  }
+
+  set product(value: Bytes) {
+    this.set("product", Value.fromBytes(value));
+  }
+}
+
 export class Product extends Entity {
   constructor(id: Bytes) {
     super();
@@ -42,90 +110,47 @@ export class Product extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get alias(): Bytes {
-    let value = this.get("alias");
-    return value!.toBytes();
+  get sales(): Array<Bytes> {
+    let value = this.get("sales");
+    return value!.toBytesArray();
   }
 
-  set alias(value: Bytes) {
-    this.set("alias", Value.fromBytes(value));
-  }
-
-  get deployer(): Bytes {
-    let value = this.get("deployer");
-    return value!.toBytes();
-  }
-
-  set deployer(value: Bytes) {
-    this.set("deployer", Value.fromBytes(value));
-  }
-
-  get proxy(): Bytes {
-    let value = this.get("proxy");
-    return value!.toBytes();
-  }
-
-  set proxy(value: Bytes) {
-    this.set("proxy", Value.fromBytes(value));
-  }
-
-  get price(): BigInt {
-    let value = this.get("price");
-    return value!.toBigInt();
-  }
-
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
-  }
-
-  get cashback(): BigInt {
-    let value = this.get("cashback");
-    return value!.toBigInt();
-  }
-
-  set cashback(value: BigInt) {
-    this.set("cashback", Value.fromBigInt(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
+  set sales(value: Array<Bytes>) {
+    this.set("sales", Value.fromBytesArray(value));
   }
 }
 
-export class ProductCounter extends Entity {
-  constructor(id: string) {
+export class InteractionCount extends Entity {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ProductCounter entity without an ID");
+    assert(id != null, "Cannot save InteractionCount entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type ProductCounter must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type InteractionCount must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ProductCounter", id.toString(), this);
+      store.set("InteractionCount", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: string): ProductCounter | null {
-    return changetype<ProductCounter | null>(store.get("ProductCounter", id));
+  static load(id: Bytes): InteractionCount | null {
+    return changetype<InteractionCount | null>(
+      store.get("InteractionCount", id.toHexString())
+    );
   }
 
-  get id(): string {
+  get id(): Bytes {
     let value = this.get("id");
-    return value!.toString();
+    return value!.toBytes();
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
   }
 
   get count(): BigInt {

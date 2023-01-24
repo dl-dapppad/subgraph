@@ -1,41 +1,33 @@
 import { ethereum, Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
-import { Deployed } from "../../generated/ProductFactory/ProductFactory";
+import { Payed } from "../../generated/Payment/Payment";
 
-export function createDeployedEvent(
-  deployer: string,
-  proxy: string,
-  alias: string,
-  price: string,
-  cashback: string
-): Deployed {
-  const paymentAToken = "0x709ed5721249cd1d7a18914b867958283ad477ab";
-  const mockEvent = newMockEvent();
+export function createPayed(
+  payer: Address,
+  paymentToken: Address,
+  alias: Bytes,
+  priceInPaymentToken: BigInt,
+  cashbackInPaymentToken: BigInt,
+  sender: Address,
+  block: ethereum.Block,
+  tx: ethereum.Transaction
+): Payed {
+  const event = changetype<Payed>(newMockEvent());
+  event.parameters = new Array();
 
-  const event = new Deployed(
-    mockEvent.address,
-    mockEvent.logIndex,
-    mockEvent.transactionLogIndex,
-    mockEvent.logType,
-    mockEvent.block,
-    mockEvent.transaction,
-    mockEvent.parameters,
-    mockEvent.receipt
+  event.parameters.push(new ethereum.EventParam("payer", ethereum.Value.fromAddress(payer)));
+  event.parameters.push(new ethereum.EventParam("paymentToken", ethereum.Value.fromAddress(paymentToken)));
+  event.parameters.push(new ethereum.EventParam("productAlias", ethereum.Value.fromBytes(alias)));
+  event.parameters.push(new ethereum.EventParam(
+    "priceInPaymentToken", ethereum.Value.fromUnsignedBigInt(priceInPaymentToken))
   );
-
-  mockEvent.transaction.from = Address.fromString(deployer);
-
-  event.parameters.push(new ethereum.EventParam("productAlias", ethereum.Value.fromBytes(Bytes.fromHexString(alias))));
-  event.parameters.push(new ethereum.EventParam("proxy", ethereum.Value.fromAddress(Address.fromString(proxy))));
-  event.parameters.push(new ethereum.EventParam(
-    "paymentToken",
-    ethereum.Value.fromAddress(Address.fromString(paymentAToken))
-  ));
-  event.parameters.push(new ethereum.EventParam("price", ethereum.Value.fromUnsignedBigInt(BigInt.fromString(price))));
-  event.parameters.push(new ethereum.EventParam(
-    "cashback",
-    ethereum.Value.fromUnsignedBigInt(BigInt.fromString(cashback))
-  ));
+  event.parameters.push(
+    new ethereum.EventParam("cashbackInPaymentToken", ethereum.Value.fromUnsignedBigInt(cashbackInPaymentToken))
+  );
+  
+  event.address = sender;
+  event.block = block;
+  event.transaction = tx;
 
   return event;
 }

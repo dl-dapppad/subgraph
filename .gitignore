@@ -2,3 +2,7 @@ node_modules
 build
 
 .env
+
+tests/.bin
+tests/.latest.json
+tests/.docker
