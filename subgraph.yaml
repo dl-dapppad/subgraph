@@ -14,7 +14,8 @@ dataSources:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Product
+        - User
+        - UserToProduct
         - Sale
       abis:
         - name: Payment
@@ -23,3 +24,26 @@ dataSources:
         - event: Payed(indexed address,address,bytes32,uint256,uint256)
           handler: onPayed
       file: ./src/mappings/Payment.ts
+
+  - kind: ethereum
+    name: ProductFactory
+    network: goerli
+    source:
+      address: "0x1b898fC32375Af028A3a3D8CAdb59DcA94E24C7D"
+      abi: ProductFactory
+      startBlock: 8181550
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - UserToProduct
+        - Sale
+      abis:
+        - name: ProductFactory
+          file: ./abis/ProductFactory.json
+      eventHandlers:
+        - event: Deployed(indexed bytes32,indexed address,address,address,uint256,uint256)
+          handler: onDeployed
+      file: ./src/mappings/ProductFactory.ts

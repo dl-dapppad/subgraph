@@ -1,10 +1,21 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import { Payed } from "../../generated/Payment/Payment";
-import { getProduct } from "../entities/Product";
 import { getSale } from "../entities/Sale";
+import { getUser } from "../entities/User";
+import { getUserToProduct } from "../entities/UserToProduct";
 
 export function onPayed(event: Payed): void {
-    const product = getProduct(event.params.productAlias);
-    getSale(event.transaction.hash, event.params.payer, event.params.cashbackInPaymentToken, event.block.timestamp, product).save();
-    
-    product.save();
+    const user = getUser(event.params.payer);
+    const userToProduct = getUserToProduct(user, event.params.productAlias);
+    const sale = getSale(userToProduct);
+
+    sale.points = event.params.cashbackInPaymentToken;
+    sale.price = event.params.priceInPaymentToken;
+
+    userToProduct.totalPoints = userToProduct.totalPoints.plus(event.params.cashbackInPaymentToken);
+    userToProduct.counterOfSales = userToProduct.counterOfSales.plus(BigInt.fromI32(1));
+
+    sale.save();
+    userToProduct.save();
+    user.save();
 }

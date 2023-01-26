@@ -1,23 +1,26 @@
 type Sale @entity(immutable: true) {
-  id: Bytes! # tx hash
-  buyer: Bytes!
-  points: BigInt!
+  id: Bytes! # UserToProduct entity id + counter
 
+  productProxyAddress: Bytes!
+  price: BigInt!
+  points: BigInt!
   timestamp: BigInt!
 
-  product: Product!
+  userToProduct: UserToProduct!
 }
 
-type Product @entity {
-  id: Bytes! # alias
+type User @entity {
+  id: Bytes! # user address
 
-  sales: [Sale!]! @derivedFrom(field: "product")
+  userToProduct: [UserToProduct!]! @derivedFrom(field: "user")
 }
 
-# @notice The entity counts interactions in single tx
-# @param id forms from tx hash
-# @param count the counter of interactions in single tx
-type InteractionCount @entity {
-  id: Bytes!
-  count: BigInt!
+type UserToProduct @entity {
+  id: Bytes! # user address + alias
+  product: Bytes! # alias
+
+  totalPoints: BigInt!
+  counterOfSales: BigInt!
+
+  user: User!
 }

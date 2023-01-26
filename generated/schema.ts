@@ -42,13 +42,22 @@ export class Sale extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get buyer(): Bytes {
-    let value = this.get("buyer");
+  get productProxyAddress(): Bytes {
+    let value = this.get("productProxyAddress");
     return value!.toBytes();
   }
 
-  set buyer(value: Bytes) {
-    this.set("buyer", Value.fromBytes(value));
+  set productProxyAddress(value: Bytes) {
+    this.set("productProxyAddress", Value.fromBytes(value));
+  }
+
+  get price(): BigInt {
+    let value = this.get("price");
+    return value!.toBigInt();
+  }
+
+  set price(value: BigInt) {
+    this.set("price", Value.fromBigInt(value));
   }
 
   get points(): BigInt {
@@ -69,17 +78,17 @@ export class Sale extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get product(): Bytes {
-    let value = this.get("product");
+  get userToProduct(): Bytes {
+    let value = this.get("userToProduct");
     return value!.toBytes();
   }
 
-  set product(value: Bytes) {
-    this.set("product", Value.fromBytes(value));
+  set userToProduct(value: Bytes) {
+    this.set("userToProduct", Value.fromBytes(value));
   }
 }
 
-export class Product extends Entity {
+export class User extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -87,18 +96,18 @@ export class Product extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Product entity without an ID");
+    assert(id != null, "Cannot save User entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type Product must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type User must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Product", id.toBytes().toHexString(), this);
+      store.set("User", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: Bytes): Product | null {
-    return changetype<Product | null>(store.get("Product", id.toHexString()));
+  static load(id: Bytes): User | null {
+    return changetype<User | null>(store.get("User", id.toHexString()));
   }
 
   get id(): Bytes {
@@ -110,17 +119,17 @@ export class Product extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get sales(): Array<Bytes> {
-    let value = this.get("sales");
+  get userToProduct(): Array<Bytes> {
+    let value = this.get("userToProduct");
     return value!.toBytesArray();
   }
 
-  set sales(value: Array<Bytes>) {
-    this.set("sales", Value.fromBytesArray(value));
+  set userToProduct(value: Array<Bytes>) {
+    this.set("userToProduct", Value.fromBytesArray(value));
   }
 }
 
-export class InteractionCount extends Entity {
+export class UserToProduct extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -128,19 +137,19 @@ export class InteractionCount extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save InteractionCount entity without an ID");
+    assert(id != null, "Cannot save UserToProduct entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type InteractionCount must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type UserToProduct must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("InteractionCount", id.toBytes().toHexString(), this);
+      store.set("UserToProduct", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: Bytes): InteractionCount | null {
-    return changetype<InteractionCount | null>(
-      store.get("InteractionCount", id.toHexString())
+  static load(id: Bytes): UserToProduct | null {
+    return changetype<UserToProduct | null>(
+      store.get("UserToProduct", id.toHexString())
     );
   }
 
@@ -153,12 +162,39 @@ export class InteractionCount extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get count(): BigInt {
-    let value = this.get("count");
+  get product(): Bytes {
+    let value = this.get("product");
+    return value!.toBytes();
+  }
+
+  set product(value: Bytes) {
+    this.set("product", Value.fromBytes(value));
+  }
+
+  get totalPoints(): BigInt {
+    let value = this.get("totalPoints");
     return value!.toBigInt();
   }
 
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
+  set totalPoints(value: BigInt) {
+    this.set("totalPoints", Value.fromBigInt(value));
+  }
+
+  get counterOfSales(): BigInt {
+    let value = this.get("counterOfSales");
+    return value!.toBigInt();
+  }
+
+  set counterOfSales(value: BigInt) {
+    this.set("counterOfSales", Value.fromBigInt(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    return value!.toBytes();
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
   }
 }
