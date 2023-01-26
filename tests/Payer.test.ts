@@ -1,7 +1,7 @@
 import { Address, BigInt, Bytes, store } from "@graphprotocol/graph-ts";
 import { getBlock, getNextBlock, getNextTx, getTransaction } from "./utils";
 import { createPayed } from "./_helpers";
-import { afterEach, assert, describe, test } from "matchstick-as";
+import { afterEach, assert, clearStore, describe, test } from "matchstick-as";
 import { onPayed } from "../src/mappings/Payment";
 
 let block = getBlock(BigInt.fromI32(1), BigInt.fromI32(1));
@@ -13,6 +13,7 @@ describe("Payer", () => {
         afterEach(() => {
             block = getNextBlock(block);
             tx = getNextTx(tx);
+            clearStore();
         });
 
         test("should handle Payed event", () => {
@@ -22,18 +23,46 @@ describe("Payer", () => {
             const priceInPaymentToken = BigInt.fromI32(10).pow(18);
             const cashbackInPaymentToken = BigInt.fromI32(10).pow(18).times(BigInt.fromI32(5));
 
-            let event = createPayed(payer, paymentToken, alias, priceInPaymentToken, cashbackInPaymentToken, sender, block, tx);
+            const event = createPayed(
+                payer, 
+                paymentToken,
+                alias,
+                priceInPaymentToken,
+                cashbackInPaymentToken,
+                sender,
+                block,
+                tx
+            );
 
             onPayed(event);
+            
+            assert.fieldEquals(
+                "UserToProduct",
+                payer.concat(alias).toHexString(),
+                "totalPoints",
+                cashbackInPaymentToken.toString()
+            );
+            assert.fieldEquals(
+                "UserToProduct",
+                payer.concat(alias).toHexString(),
+                "counterOfSales",
+                "1"
+            );
 
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "buyer", payer.toHexString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "points", cashbackInPaymentToken.toString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "timestamp", block.timestamp.toString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "product", alias.toHexString());
-
-            assert.assertNotNull(store.get("Product", alias.toHexString()));
-
-            assert.fieldEquals("InteractionCount", tx.hash.toHexString(), "count", "1");
+            assert.fieldEquals(
+                "Sale",
+                payer.concat(alias).concatI32(0).toHexString(),
+                "points",
+                cashbackInPaymentToken.toString()
+            );
+            assert.fieldEquals(
+                "Sale",
+                payer.concat(alias).concatI32(0).toHexString(),
+                "price",
+                priceInPaymentToken.toString()
+            );
+            
+            assert.assertNotNull(store.get("User", payer.toHexString()));
         });
 
         test("should handle Payed event twice in one tx", () => {
@@ -43,25 +72,61 @@ describe("Payer", () => {
             const priceInPaymentToken = BigInt.fromI32(10).pow(18);
             const cashbackInPaymentToken = BigInt.fromI32(10).pow(18).times(BigInt.fromI32(5));
 
-            let event = createPayed(payer, paymentToken, alias, priceInPaymentToken, cashbackInPaymentToken, sender, block, tx);
+            const event = createPayed(
+                payer,
+                paymentToken,
+                alias,
+                priceInPaymentToken,
+                cashbackInPaymentToken,
+                sender,
+                block,
+                tx
+            );
 
             onPayed(event);
 
             onPayed(event);
 
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "buyer", payer.toHexString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "points", cashbackInPaymentToken.toString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "timestamp", block.timestamp.toString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(0).toHexString(), "product", alias.toHexString());
+            assert.fieldEquals(
+                "UserToProduct",
+                payer.concat(alias).toHexString(),
+                "totalPoints",
+                cashbackInPaymentToken.plus(cashbackInPaymentToken).toString()
+            );
+            assert.fieldEquals(
+                "UserToProduct",
+                payer.concat(alias).toHexString(),
+                "counterOfSales",
+                "2"
+            );
 
-            assert.fieldEquals("Sale", tx.hash.concatI32(1).toHexString(), "buyer", payer.toHexString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(1).toHexString(), "points", cashbackInPaymentToken.toString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(1).toHexString(), "timestamp", block.timestamp.toString());
-            assert.fieldEquals("Sale", tx.hash.concatI32(1).toHexString(), "product", alias.toHexString());
-
-            assert.assertNotNull(store.get("Product", alias.toHexString()));
-
-            assert.fieldEquals("InteractionCount", tx.hash.toHexString(), "count", "2");
+            assert.fieldEquals(
+                "Sale",
+                payer.concat(alias).concatI32(0).toHexString(),
+                "points",
+                cashbackInPaymentToken.toString()
+            );
+            assert.fieldEquals(
+                "Sale",
+                payer.concat(alias).concatI32(0).toHexString(),
+                "price",
+                priceInPaymentToken.toString()
+            );
+     
+            assert.fieldEquals(
+                "Sale",
+                payer.concat(alias).concatI32(1).toHexString(),
+                "points",
+                cashbackInPaymentToken.toString()
+            );
+            assert.fieldEquals(
+                "Sale",
+                payer.concat(alias).concatI32(1).toHexString(),
+                "price",
+                priceInPaymentToken.toString()
+            );
+            
+            assert.assertNotNull(store.get("User", payer.toHexString()));
         });
     });
 });
