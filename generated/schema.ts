@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Sale extends Entity {
+export class ProductSale extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -19,18 +19,20 @@ export class Sale extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Sale entity without an ID");
+    assert(id != null, "Cannot save ProductSale entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type Sale must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProductSale must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Sale", id.toBytes().toHexString(), this);
+      store.set("ProductSale", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: Bytes): Sale | null {
-    return changetype<Sale | null>(store.get("Sale", id.toHexString()));
+  static load(id: Bytes): ProductSale | null {
+    return changetype<ProductSale | null>(
+      store.get("ProductSale", id.toHexString())
+    );
   }
 
   get id(): Bytes {
@@ -51,15 +53,6 @@ export class Sale extends Entity {
     this.set("productProxyAddress", Value.fromBytes(value));
   }
 
-  get price(): BigInt {
-    let value = this.get("price");
-    return value!.toBigInt();
-  }
-
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
-  }
-
   get points(): BigInt {
     let value = this.get("points");
     return value!.toBigInt();
@@ -78,6 +71,33 @@ export class Sale extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
+  get paymentToken(): Bytes {
+    let value = this.get("paymentToken");
+    return value!.toBytes();
+  }
+
+  set paymentToken(value: Bytes) {
+    this.set("paymentToken", Value.fromBytes(value));
+  }
+
+  get initialPrice(): BigInt {
+    let value = this.get("initialPrice");
+    return value!.toBigInt();
+  }
+
+  set initialPrice(value: BigInt) {
+    this.set("initialPrice", Value.fromBigInt(value));
+  }
+
+  get paymentPrice(): BigInt {
+    let value = this.get("paymentPrice");
+    return value!.toBigInt();
+  }
+
+  set paymentPrice(value: BigInt) {
+    this.set("paymentPrice", Value.fromBigInt(value));
+  }
+
   get userToProduct(): Bytes {
     let value = this.get("userToProduct");
     return value!.toBytes();
@@ -88,7 +108,7 @@ export class Sale extends Entity {
   }
 }
 
-export class User extends Entity {
+export class ProductCounter extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -96,18 +116,20 @@ export class User extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save User entity without an ID");
+    assert(id != null, "Cannot save ProductCounter entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type User must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProductCounter must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("User", id.toBytes().toHexString(), this);
+      store.set("ProductCounter", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: Bytes): User | null {
-    return changetype<User | null>(store.get("User", id.toHexString()));
+  static load(id: Bytes): ProductCounter | null {
+    return changetype<ProductCounter | null>(
+      store.get("ProductCounter", id.toHexString())
+    );
   }
 
   get id(): Bytes {
@@ -119,13 +141,22 @@ export class User extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get userToProduct(): Array<Bytes> {
-    let value = this.get("userToProduct");
-    return value!.toBytesArray();
+  get productSalesCount(): BigInt {
+    let value = this.get("productSalesCount");
+    return value!.toBigInt();
   }
 
-  set userToProduct(value: Array<Bytes>) {
-    this.set("userToProduct", Value.fromBytesArray(value));
+  set productSalesCount(value: BigInt) {
+    this.set("productSalesCount", Value.fromBigInt(value));
+  }
+
+  get usersBought(): BigInt {
+    let value = this.get("usersBought");
+    return value!.toBigInt();
+  }
+
+  set usersBought(value: BigInt) {
+    this.set("usersBought", Value.fromBigInt(value));
   }
 }
 
@@ -171,24 +202,6 @@ export class UserToProduct extends Entity {
     this.set("product", Value.fromBytes(value));
   }
 
-  get totalPoints(): BigInt {
-    let value = this.get("totalPoints");
-    return value!.toBigInt();
-  }
-
-  set totalPoints(value: BigInt) {
-    this.set("totalPoints", Value.fromBigInt(value));
-  }
-
-  get counterOfSales(): BigInt {
-    let value = this.get("counterOfSales");
-    return value!.toBigInt();
-  }
-
-  set counterOfSales(value: BigInt) {
-    this.set("counterOfSales", Value.fromBigInt(value));
-  }
-
   get user(): Bytes {
     let value = this.get("user");
     return value!.toBytes();
@@ -196,5 +209,14 @@ export class UserToProduct extends Entity {
 
   set user(value: Bytes) {
     this.set("user", Value.fromBytes(value));
+  }
+
+  get totalPoints(): BigInt {
+    let value = this.get("totalPoints");
+    return value!.toBigInt();
+  }
+
+  set totalPoints(value: BigInt) {
+    this.set("totalPoints", Value.fromBigInt(value));
   }
 }

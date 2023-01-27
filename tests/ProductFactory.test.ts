@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, store } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { getBlock, getNextBlock, getNextTx, getTransaction } from "./utils";
 import { afterEach, assert, clearStore, describe, test } from "matchstick-as";
 import { createDeployed } from "./_helpers";

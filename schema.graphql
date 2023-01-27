@@ -1,26 +1,27 @@
-type Sale @entity(immutable: true) {
-  id: Bytes! # UserToProduct entity id + counter
-
+type ProductSale @entity {
+  id: Bytes! # product alias + `ProductCounter.productSalesCount`
+  
   productProxyAddress: Bytes!
-  price: BigInt!
   points: BigInt!
   timestamp: BigInt!
+
+  paymentToken: Bytes!
+  initialPrice: BigInt! # Price from `Deployed` event in base decimals
+  paymentPrice: BigInt! # End price from `Payed` event in `paymentToken` decimals
 
   userToProduct: UserToProduct!
 }
 
-type User @entity {
-  id: Bytes! # user address
-
-  userToProduct: [UserToProduct!]! @derivedFrom(field: "user")
+type ProductCounter @entity {
+  id: Bytes! # product alias
+  productSalesCount: BigInt! # Total number of product sales
+  usersBought: BigInt! # Total number of users that bought this product
 }
 
 type UserToProduct @entity {
-  id: Bytes! # user address + alias
-  product: Bytes! # alias
+  id: Bytes! # product alias + user address
 
+  product: Bytes!
+  user: Bytes!
   totalPoints: BigInt!
-  counterOfSales: BigInt!
-
-  user: User!
 }

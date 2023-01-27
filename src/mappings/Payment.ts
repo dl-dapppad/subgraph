@@ -1,21 +1,26 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 import { Payed } from "../../generated/Payment/Payment";
-import { getSale } from "../entities/Sale";
-import { getUser } from "../entities/User";
+import { getProductSale } from "../entities/ProductSale";
 import { getUserToProduct } from "../entities/UserToProduct";
+import { getProductCounter } from "../entities/ProductCounter";
 
 export function onPayed(event: Payed): void {
-    const user = getUser(event.params.payer);
-    const userToProduct = getUserToProduct(user, event.params.productAlias);
-    const sale = getSale(userToProduct);
+    const userToProduct = getUserToProduct(event.params.payer, event.params.productAlias);
+    const counter = getProductCounter(event.params.productAlias);
+    const sale = getProductSale(counter, userToProduct);
 
     sale.points = event.params.cashbackInPaymentToken;
-    sale.price = event.params.priceInPaymentToken;
+    sale.paymentPrice = event.params.priceInPaymentToken;
+    
+    if (userToProduct.totalPoints.equals(BigInt.zero())) {
+        counter.usersBought = counter.usersBought.plus(BigInt.fromI32(1));
+    }
 
     userToProduct.totalPoints = userToProduct.totalPoints.plus(event.params.cashbackInPaymentToken);
-    userToProduct.counterOfSales = userToProduct.counterOfSales.plus(BigInt.fromI32(1));
+
+    counter.productSalesCount = counter.productSalesCount.plus(BigInt.fromI32(1));
 
     sale.save();
+    counter.save();
     userToProduct.save();
-    user.save();
 }
