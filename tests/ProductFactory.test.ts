@@ -16,7 +16,7 @@ describe("ProductFactory", () => {
             clearStore();
         });
 
-        test("should handle Payed event", () => {
+        test("should handle Deployed event", () => {
             const proxy = Address.fromString("0x76e98f7d84603AEb97cd1c89A80A9e914f181678");
             const payer = Address.fromString("0x76e98f7d84603AEb97cd1c89A80A9e914f181679");
             const paymentToken = Address.fromString("0x76e98f7d84603AEb97cd1c89A80A9e914f181670");
@@ -39,17 +39,31 @@ describe("ProductFactory", () => {
             onDeployed(event);
 
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(0).toHexString(),
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
                 "productProxyAddress",
                 proxy.toHexString()
             );
 
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(0).toHexString(),
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
                 "timestamp",
                 block.timestamp.toString()
+            );
+
+            assert.fieldEquals(
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
+                "paymentToken",
+                paymentToken.toHexString()
+            );
+
+            assert.fieldEquals(
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
+                "initialPrice",
+                price.toString()
             );
         });
     });

@@ -6,6 +6,7 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "test": "graph test",
+    "docker-test": "graph -d test",
     "lint": "eslint src/**",
     "lint-fix": "eslint src/** --fix",
     "create-local": "graph create --node http://localhost:8020/ TEST_SUBGRAPH",

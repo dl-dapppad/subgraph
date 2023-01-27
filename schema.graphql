@@ -19,7 +19,7 @@ type ProductCounter @entity {
 }
 
 type UserToProduct @entity {
-  id: Bytes! # product alias + user address
+  id: Bytes! # user address + alias
 
   product: Bytes!
   user: Bytes!

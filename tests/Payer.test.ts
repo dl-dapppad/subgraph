@@ -41,28 +41,45 @@ describe("Payer", () => {
                 payer.concat(alias).toHexString(),
                 "totalPoints",
                 cashbackInPaymentToken.toString()
+            );      
+            assert.fieldEquals(
+                "UserToProduct",
+                payer.concat(alias).toHexString(),
+                "user",
+                payer.toHexString()
             );
             assert.fieldEquals(
                 "UserToProduct",
                 payer.concat(alias).toHexString(),
-                "counterOfSales",
-                "1"
+                "product",
+                alias.toHexString()
             );
 
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(0).toHexString(),
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
                 "points",
                 cashbackInPaymentToken.toString()
             );
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(0).toHexString(),
-                "price",
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
+                "paymentPrice",
                 priceInPaymentToken.toString()
             );
-            
-            assert.assertNotNull(store.get("User", payer.toHexString()));
+
+            assert.fieldEquals(
+                "ProductCounter",
+                alias.toHexString(),
+                "usersBought",
+                "1"
+            );
+            assert.fieldEquals(
+                "ProductCounter",
+                alias.toHexString(),
+                "productSalesCount",
+                "1"
+            );
         });
 
         test("should handle Payed event twice in one tx", () => {
@@ -96,37 +113,54 @@ describe("Payer", () => {
             assert.fieldEquals(
                 "UserToProduct",
                 payer.concat(alias).toHexString(),
-                "counterOfSales",
-                "2"
+                "user",
+                payer.toHexString()
+            );
+            assert.fieldEquals(
+                "UserToProduct",
+                payer.concat(alias).toHexString(),
+                "product",
+                alias.toHexString()
             );
 
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(0).toHexString(),
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
                 "points",
                 cashbackInPaymentToken.toString()
             );
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(0).toHexString(),
-                "price",
+                "ProductSale",
+                alias.concatI32(0).toHexString(),
+                "paymentPrice",
                 priceInPaymentToken.toString()
             );
      
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(1).toHexString(),
+                "ProductSale",
+                alias.concatI32(1).toHexString(),
                 "points",
                 cashbackInPaymentToken.toString()
             );
             assert.fieldEquals(
-                "Sale",
-                payer.concat(alias).concatI32(1).toHexString(),
-                "price",
+                "ProductSale",
+                alias.concatI32(1).toHexString(),
+                "paymentPrice",
                 priceInPaymentToken.toString()
             );
             
-            assert.assertNotNull(store.get("User", payer.toHexString()));
+            assert.fieldEquals(
+                "ProductCounter",
+                alias.toHexString(),
+                "usersBought",
+                "1"
+            );
+            assert.fieldEquals(
+                "ProductCounter",
+                alias.toHexString(),
+                "productSalesCount",
+                "2"
+            );
         });
     });
 });
