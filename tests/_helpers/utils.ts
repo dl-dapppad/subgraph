@@ -1,6 +1,6 @@
 import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
-import { assert } from "matchstick-as";
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function getBlock(number: BigInt, timestamp: BigInt): ethereum.Block {
   return new ethereum.Block(
     Bytes.empty(),

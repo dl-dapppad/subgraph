@@ -25,3 +25,7 @@ type UserToProduct @entity {
   user: Bytes!
   totalPoints: BigInt!
 }
+
+type PaymentToken @entity {
+  id: Bytes! # Payment token address
+}

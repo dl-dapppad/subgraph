@@ -220,3 +220,37 @@ export class UserToProduct extends Entity {
     this.set("totalPoints", Value.fromBigInt(value));
   }
 }
+
+export class PaymentToken extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PaymentToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type PaymentToken must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("PaymentToken", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static load(id: Bytes): PaymentToken | null {
+    return changetype<PaymentToken | null>(
+      store.get("PaymentToken", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    return value!.toBytes();
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+}

@@ -1,6 +1,8 @@
+/* eslint-disable  @typescript-eslint/ban-types */
+
 import { ethereum, Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
-import { Payed } from "../../generated/Payment/Payment";
+import { Payed, PaymentTokenAdded, PaymentTokenRemoved } from "../../generated/Payment/Payment";
 import { Deployed } from "../../generated/ProductFactory/ProductFactory";
 
 export function createPayed(
@@ -14,7 +16,6 @@ export function createPayed(
   tx: ethereum.Transaction
 ): Payed {
   const event = changetype<Payed>(newMockEvent());
-  event.parameters = new Array();
 
   event.parameters.push(new ethereum.EventParam("payer", ethereum.Value.fromAddress(payer)));
   event.parameters.push(new ethereum.EventParam("paymentToken", ethereum.Value.fromAddress(paymentToken)));
@@ -33,6 +34,26 @@ export function createPayed(
   return event;
 }
 
+export function createPaymentTokenAdded(
+  token: Address,
+): PaymentTokenAdded {
+  const event = changetype<PaymentTokenAdded>(newMockEvent());
+
+  event.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromAddress(token)));
+
+  return event;
+}
+
+export function createPaymentTokenRemoved(
+  token: Address,
+): PaymentTokenRemoved {
+  const event = changetype<PaymentTokenRemoved>(newMockEvent());
+
+  event.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromAddress(token)));
+
+  return event;
+}
+
 export function createDeployed(
   alias: Bytes,
   payer: Address,
@@ -45,7 +66,6 @@ export function createDeployed(
   tx: ethereum.Transaction
 ): Deployed {
   const event = changetype<Deployed>(newMockEvent());
-  event.parameters = new Array();
 
   event.parameters.push(new ethereum.EventParam("productAlias", ethereum.Value.fromBytes(alias)));
   event.parameters.push(new ethereum.EventParam("payer", ethereum.Value.fromAddress(payer)));

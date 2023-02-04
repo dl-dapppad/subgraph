@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Payment
-    network: goerli
+    network: mumbai
     source:
-      address: "0x1b898fC32375Af028A3a3D8CAdb59DcA94E24C7D"
+      address: "0x735D63E50408626DbAb0B002dFdC55f96CaaA5Fd"
       abi: Payment
-      startBlock: 8181550
+      startBlock: 31564800
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -17,21 +17,26 @@ dataSources:
         - User
         - UserToProduct
         - Sale
+        - PaymentToken
       abis:
         - name: Payment
           file: ./abis/Payment.json
       eventHandlers:
         - event: Payed(indexed address,address,bytes32,uint256,uint256)
           handler: onPayed
+        - event: PaymentTokenAdded(address)
+          handler: onPaymentTokenAdded
+        - event: PaymentTokenRemoved(address)
+          handler: onPaymentTokenRemoved
       file: ./src/mappings/Payment.ts
 
   - kind: ethereum
     name: ProductFactory
-    network: goerli
+    network: mumbai
     source:
-      address: "0x1b898fC32375Af028A3a3D8CAdb59DcA94E24C7D"
+      address: "0xD633c1029ce7268f2c019Ba7a85cF5eB9071f814"
       abi: ProductFactory
-      startBlock: 8181550
+      startBlock: 31565000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

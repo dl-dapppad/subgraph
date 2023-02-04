@@ -1,7 +1,6 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
-import { getBlock, getNextBlock, getNextTx, getTransaction } from "./utils";
 import { afterEach, assert, clearStore, describe, test } from "matchstick-as";
-import { createDeployed } from "./_helpers";
+import { createDeployed, getBlock, getNextBlock, getNextTx, getTransaction } from "./_helpers";
 import { onDeployed } from "../src/mappings/ProductFactory";
 
 let block = getBlock(BigInt.fromI32(1), BigInt.fromI32(1));
@@ -16,7 +15,7 @@ describe("ProductFactory", () => {
             clearStore();
         });
 
-        test("should handle Deployed event", () => {
+        test("should handle `Deployed` event", () => {
             const proxy = Address.fromString("0x76e98f7d84603AEb97cd1c89A80A9e914f181678");
             const payer = Address.fromString("0x76e98f7d84603AEb97cd1c89A80A9e914f181679");
             const paymentToken = Address.fromString("0x76e98f7d84603AEb97cd1c89A80A9e914f181670");
@@ -38,33 +37,11 @@ describe("ProductFactory", () => {
 
             onDeployed(event);
 
-            assert.fieldEquals(
-                "ProductSale",
-                alias.concatI32(0).toHexString(),
-                "productProxyAddress",
-                proxy.toHexString()
-            );
-
-            assert.fieldEquals(
-                "ProductSale",
-                alias.concatI32(0).toHexString(),
-                "timestamp",
-                block.timestamp.toString()
-            );
-
-            assert.fieldEquals(
-                "ProductSale",
-                alias.concatI32(0).toHexString(),
-                "paymentToken",
-                paymentToken.toHexString()
-            );
-
-            assert.fieldEquals(
-                "ProductSale",
-                alias.concatI32(0).toHexString(),
-                "initialPrice",
-                price.toString()
-            );
+            const id = alias.concatI32(0).toHexString();
+            assert.fieldEquals("ProductSale", id, "productProxyAddress", proxy.toHexString());
+            assert.fieldEquals("ProductSale", id, "timestamp", block.timestamp.toString());
+            assert.fieldEquals("ProductSale", id, "paymentToken", paymentToken.toHexString());
+            assert.fieldEquals("ProductSale", id, "initialPrice", price.toString());
         });
     });
 });

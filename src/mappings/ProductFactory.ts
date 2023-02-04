@@ -1,7 +1,6 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import { Deployed } from "../../generated/ProductFactory/ProductFactory";
-import { getProductCounter } from "../entities/ProductCounter";
-import { getProductSale } from "../entities/ProductSale";
-import { getUserToProduct } from "../entities/UserToProduct";
+import { getProductSale, getUserToProduct, getProductCounter } from "../entities";
 
 export function onDeployed(event: Deployed): void {
     const userToProduct = getUserToProduct(event.params.payer, event.params.productAlias);
@@ -13,6 +12,8 @@ export function onDeployed(event: Deployed): void {
 
     sale.paymentToken = event.params.paymentToken;
     sale.initialPrice = event.params.price;
+
+    counter.productSalesCount = counter.productSalesCount.plus(BigInt.fromI32(1));
 
     sale.save();
     counter.save();
