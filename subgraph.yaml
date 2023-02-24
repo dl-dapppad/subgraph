@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Payment
-    network: mumbai
+    network: matic
     source:
-      address: "0x735D63E50408626DbAb0B002dFdC55f96CaaA5Fd"
+      address: "0xaBc7B59b87b999E7dDdF1E7C864409D51c05723C"
       abi: Payment
-      startBlock: 31564800
+      startBlock: 39627260
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -32,11 +32,11 @@ dataSources:
 
   - kind: ethereum
     name: ProductFactory
-    network: mumbai
+    network: matic
     source:
-      address: "0xD633c1029ce7268f2c019Ba7a85cF5eB9071f814"
+      address: "0x45A3CcbD69ED47aE26C62739a7d473f20D9F32C6"
       abi: ProductFactory
-      startBlock: 31565000
+      startBlock: 39627280
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
